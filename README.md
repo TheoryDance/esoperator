@@ -117,7 +117,12 @@ public interface TestMapper {
 
 4、在xml中使用的#{}符号，这个是参考mybatis方式，当使用#{}的时候，会根据传递的参数是数值还是字符串，自动判断是否需要添加双引号"",如果是使用${}符号的话，就是纯粹的字符串替换，<dsl>中可以在非id属性上使用${}，来达到动态指定索引和解析返回结果，也可以在dsl中查询语句中使用#{}和${}来动态的传递参数，分页等。<br>
 
-5、注意，mapper.class接口和mapper.xml文件需要在同一个目录中，在springboot中使用的时候，需要在pom.xml中添加代码：
+5、在parseResult属性的值中，除了可以指定解析[]下所有对象，也是可以在里面指定具体数值，解析某一个对象的，比如
+```
+parseResult="hits.hits[0]->[_score,_source.aqi as aqi,_source.pm10 as pm10]"
+```
+
+6、注意，mapper.class接口和mapper.xml文件需要在同一个目录中，在springboot中使用的时候，需要在pom.xml中添加代码：
 ```
 	<build>
 		<resources>
