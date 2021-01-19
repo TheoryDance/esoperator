@@ -86,6 +86,7 @@ public interface TestMapper {
 
 ## 使用说明
 1、xml文件中的<dsl>标签中的esIndex就是es中的索引，parseResult属性是控制如何对查询的结果进行解析，解析的具体代码实现是在com.theorydance.esoperator.utils.EsUtils中实现的；<br>
+
 2、parseResult属性中可以对需要返回的属性进行重命名，比如
 ```
 	hits.hits[]._source->[aqi,pm10,pm25 as pm2_5,so2,no2,co,o3,o38,quality,city,city_code,province,province_code]
@@ -99,6 +100,7 @@ public interface TestMapper {
 ...
 ```
 上面的这种返回的内容都在同一层次中；<br>
+
 3、针对返回的结果不在统一层次中，同样可以在parseResult中进行指定，让其自动解析，比如：
 ```
 	parseResult="hits.hits[]->[_score,_source.aqi as aqi,_source.pm10 as pm10]"
@@ -112,4 +114,29 @@ public interface TestMapper {
 {aqi=42, pm10=858, _score=0.000004908421}
 ...
 ```
-4、在xml中使用的#{}符号，这个是参考mybatis方式，当使用#{}的时候，会根据传递的参数是数值还是字符串，自动判断是否需要添加双引号"",如果是使用${}符号的话，就是纯粹的字符串替换，<dsl>中可以在非id属性上使用${}，来达到动态指定索引和解析返回结果，也可以在dsl中查询语句中使用#{}和${}来动态的传递参数，分页等。
+
+4、在xml中使用的#{}符号，这个是参考mybatis方式，当使用#{}的时候，会根据传递的参数是数值还是字符串，自动判断是否需要添加双引号"",如果是使用${}符号的话，就是纯粹的字符串替换，<dsl>中可以在非id属性上使用${}，来达到动态指定索引和解析返回结果，也可以在dsl中查询语句中使用#{}和${}来动态的传递参数，分页等。<br>
+
+5、注意，mapper.class接口和mapper.xml文件需要在同一个目录中，在springboot中使用的时候，需要在pom.xml中添加代码：
+```
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/**</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.xml</include>
+					<include>**/*.tld</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
+	</build>
+```
