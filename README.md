@@ -7,9 +7,7 @@
 ## 示例：
 ```
 public interface TestMapper {
-	
 	List<Map<String, Object>> getDataList(@Esparam("remark") String remark, @Esparam("size") int pagesize);
-	
 }
 ```
 
@@ -89,7 +87,7 @@ public interface TestMapper {
 
 2、parseResult属性中可以对需要返回的属性进行重命名，比如
 ```
-	hits.hits[]._source->[aqi,pm10,pm25 as pm2_5,so2,no2,co,o3,o38,quality,city,city_code,province,province_code]
+hits.hits[]._source->[aqi,pm10,pm25 as pm2_5,so2,no2,co,o3,o38,quality,city,city_code,province,province_code]
 ```
 返回结果
 ```
@@ -103,7 +101,7 @@ public interface TestMapper {
 
 3、针对返回的结果不在统一层次中，同样可以在parseResult中进行指定，让其自动解析，比如：
 ```
-	parseResult="hits.hits[]->[_score,_source.aqi as aqi,_source.pm10 as pm10]"
+parseResult="hits.hits[]->[_score,_source.aqi as aqi,_source.pm10 as pm10]"
 ```
 返回结果
 ```
@@ -124,24 +122,24 @@ parseResult="hits.hits[0]->[_score,_source.aqi as aqi,_source.pm10 as pm10]"
 
 6、注意，mapper.class接口和mapper.xml文件需要在同一个目录中，在springboot中使用的时候，需要在pom.xml中添加代码：
 ```
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<includes>
-					<include>**/**</include>
-				</includes>
-				<filtering>false</filtering>
-			</resource>
-			<resource>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**/*.properties</include>
-					<include>**/*.xml</include>
-					<include>**/*.tld</include>
-				</includes>
-				<filtering>false</filtering>
-			</resource>
-		</resources>
-	</build>
+<build>
+  <resources>
+	<resource>
+	  <directory>src/main/resources</directory>
+	  <includes>
+		<include>**/**</include>
+	  </includes>
+	  <filtering>false</filtering>
+	</resource>
+	<resource>
+	  <directory>src/main/java</directory>
+	  <includes>
+		<include>**/*.properties</include>
+		<include>**/*.xml</include>
+		<include>**/*.tld</include>
+	  </includes>
+	  <filtering>false</filtering>
+	</resource>
+  </resources>
+</build>
 ```
