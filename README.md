@@ -4,6 +4,9 @@
 ## 描述：
 在之前的项目中，一直使用mybatis，习惯了使用sql语句进行查询和处理数据，当切换到elasticsearch数据源后，发现需要通过其对应的高级编程接口对数据进行操作和查询，而且返回结果一层一层的，光解析数据，都挺麻烦，故而参考mybatis方式，自己针对http请求进行了一个封装，在kibana中编写查询语句，然后复制作为查询语言（类似mysql中的sql语句），然后对查询结果进行解析定义，框架进行自动解析。
 
+## demo
+在目录src/main/java/com/theorydance/esoperator/demo/ 下面，里面有一个新增数据操作和查询数据操作
+
 ## 示例：
 ```
 public interface TestMapper {
