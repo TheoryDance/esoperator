@@ -38,3 +38,77 @@ public interface TestMapper {
 ```
 
 就可以直接将es中的数据取出到List<Map<String,Object>>中了
+
+## 测试数据
+```
+{
+  "took" : 60,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 419162,
+    "max_score" : 4.908421E-6,
+    "hits" : [
+      {
+        "_index" : "forecast_city_hour_air",
+        "_type" : "info",
+        "_id" : "_lfEmHYBdAMslb98Zb4c",
+        "_score" : 4.908421E-6,
+        "_source" : {
+          "stime" : "2020-12-01 00:00:00",
+          "etime" : "2020-12-01 12:00:00",
+          "aqi" : 397,
+          "pm10" : 215,
+          "pm25" : 13,
+          "so2" : 227,
+          "no2" : 24,
+          "co" : 1.0916091255026077,
+          "o3" : 92,
+          "o38" : 446,
+          "quality" : "1",
+          "city" : "广元市",
+          "city_code" : "510800",
+          "province" : "四川省",
+          "province_code" : "510000",
+          "primary_pollutant" : "PM10",
+          "remark" : "测试"
+        }
+      },...
+    ]
+  }
+}
+```
+
+## 使用说明
+1、xml文件中的<dsl>标签中的esIndex就是es中的索引，parseResult属性是控制如何对查询的结果进行解析，解析的具体代码实现是在com.theorydance.esoperator.utils.EsUtils中实现的；<br>
+2、parseResult属性中可以对需要返回的属性进行重命名，比如
+```
+	hits.hits[]._source->[aqi,pm10,pm25 as pm2_5,so2,no2,co,o3,o38,quality,city,city_code,province,province_code]
+```
+返回结果
+```
+{o3=92, city=广元市, pm10=215, city_code=510800, co=1.0916091255026077, province_code=510000, quality=1, no2=24, pm25=13, province=四川省, o38=446, so2=227, aqi=397}
+{o3=33, city=南充市, pm10=243, city_code=511300, co=1.0839999451269338, province_code=510000, quality=4, no2=43, pm25=175, province=四川省, o38=280, so2=79, aqi=377}
+{o3=134, city=达州市, pm10=570, city_code=511700, co=0.8754323620008577, province_code=510000, quality=1, no2=53, pm25=162, province=四川省, o38=679, so2=282, aqi=301}
+{o3=78, city=巴中市, pm10=912, city_code=511900, co=1.0770642456450192, province_code=510000, quality=2, no2=26, pm25=61, province=四川省, o38=385, so2=92, aqi=92}
+...
+```
+上面的这种返回的内容都在同一层次中；<br>
+3、针对返回的结果不在统一层次中，同样可以在parseResult中进行指定，让其自动解析，比如：
+```
+	parseResult="hits.hits[]->[_score,_source.aqi as aqi,_source.pm10 as pm10]"
+```
+返回结果
+```
+{aqi=397, pm10=215, _score=0.000004908421}
+{aqi=377, pm10=243, _score=0.000004908421}
+{aqi=301, pm10=570, _score=0.000004908421}
+{aqi=92, pm10=912, _score=0.000004908421}
+{aqi=42, pm10=858, _score=0.000004908421}
+...
+```
