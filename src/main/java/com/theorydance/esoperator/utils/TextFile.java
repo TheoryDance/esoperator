@@ -68,6 +68,20 @@ public class TextFile {
 		}
 	}
 	
+	public String readAll() {
+		StringBuffer sb = new StringBuffer();
+		try {
+			String line = null;
+			while((line=br.readLine())!=null) {
+				sb.append(line);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return sb.toString();
+	}
+	
 	public void close() {
 		closeIO(br);
 		closeIO(printWriter);
