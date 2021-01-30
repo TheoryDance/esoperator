@@ -68,14 +68,19 @@ public class EsProxy implements InvocationHandler{
         String methodName = method.getName();
         Map<String,String> dslDefine = dslMap.get(methodName); // 从xml中得到该方法对应的dsl定义
         if(dslDefine == null) {
-        	 // 解析该方法对应的xml文件
-            SAXParserFactory factory = SAXParserFactory.newInstance();//1.或去SAXParserFactory实例
-            SAXParser saxParser = factory.newSAXParser();//2.获取SAXparser实例
-            EsDSLPraseHandel handel = new EsDSLPraseHandel();//创建Handel对象
-            // 找到该方法对应的xml文件，要求xml文件与定义的方法在同一个目录中，且文件名相同，方法名相同
-            InputStream xmlFile = EsProxy.class.getResourceAsStream("/"+method.getDeclaringClass().getName().replace(".", "/")+".xml");
-            saxParser.parse(xmlFile, handel);
-            dslDefine = dslMap.get(methodName); // 从xml中得到该方法对应的dsl定义
+	  synchronized(EsProxy.class){
+	  	dslDefine = dslMap.get(methodName);
+		if(dlsDefine == null){
+			// 解析该方法对应的xml文件
+            		SAXParserFactory factory = SAXParserFactory.newInstance();//1.或去SAXParserFactory实例
+           		SAXParser saxParser = factory.newSAXParser();//2.获取SAXparser实例
+            		EsDSLPraseHandel handel = new EsDSLPraseHandel();//创建Handel对象
+            		// 找到该方法对应的xml文件，要求xml文件与定义的方法在同一个目录中，且文件名相同，方法名相同
+            		InputStream xmlFile = EsProxy.class.getResourceAsStream("/"+method.getDeclaringClass().getName().replace(".", "/")+".xml");
+            		saxParser.parse(xmlFile, handel);
+            		dslDefine = dslMap.get(methodName); // 从xml中得到该方法对应的dsl定义
+		}
+	  }
         }
 
         String dsl = dslDefine.get("dsl");
