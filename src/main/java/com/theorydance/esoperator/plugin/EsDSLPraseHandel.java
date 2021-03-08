@@ -10,6 +10,11 @@ public class EsDSLPraseHandel extends DefaultHandler {
 	
 	private String dslId;
 	private String qname;
+	private String spaceName;
+	
+	public EsDSLPraseHandel(String spaceName) {
+		this.spaceName = spaceName;
+	}
 	
     //遍历xml文件开始标签
     @Override
@@ -34,7 +39,7 @@ public class EsDSLPraseHandel extends DefaultHandler {
             	String attrName = attributes.getQName(i);
             	String attrValue = attributes.getValue(i);
             	if(attrName.equals("id")) {
-            		this.dslId = attrValue;
+            		this.dslId = spaceName + "." + attrValue;
             	}
             	map.put(attrName, attrValue);
     		}
